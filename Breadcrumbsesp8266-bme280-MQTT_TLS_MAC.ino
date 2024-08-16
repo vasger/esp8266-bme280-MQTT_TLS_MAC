@@ -45,8 +45,7 @@ char pressHpaString[6];
 char voltageString[6];
 String responseJson;
 /*
-const char* ssid = "gpmradio_mobile"; // WiFi network SSID
-const char* password = "nrwcX8:3gxqf"; // WiFi network password
+Put you wi-fi credentials here
 */
 const char* ssid = "Wifi-network"; // WiFi network SSID
 const char* password = "Wifi-network-password"; // WiFi network password
