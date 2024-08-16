@@ -62,7 +62,6 @@ const char* mqtt_password = "mqtt_password";      // MQTT client password, if ne
 const String TEMP_STATUS_TOPIC = "sensors/"+WiFi.macAddress()+"/test/temperature";
 const String HUMIDITY_STATUS_TOPIC = "sensors/"+WiFi.macAddress()+"/test/humidity";
 const String PRESSURE_STATUS_TOPIC = "sensors/"+WiFi.macAddress()+"/test/pressure";
-const String VOLTAGE_STATUS_TOPIC = "sensors/"+WiFi.macAddress()+"/test/voltage";
 
 
 
@@ -147,8 +146,6 @@ void connect_mqtt() //Connecting to the MQTT broker
         client.publish(HUMIDITY_STATUS_TOPIC.c_str(), dtostrf(humidity, 2, 2, humidityString));
         client.publish(PRESSURE_STATUS_TOPIC.c_str(), dtostrf(pressHpa, 2, 2, pressHpaString));
 
-        client.publish(VOLTAGE_STATUS_TOPIC.c_str(), dtostrf(level/100, 2, 2, voltageString));
-        // "Proj/webtech/"WiFi.macAddress()"/Time"
       }
     else
       {
@@ -173,10 +170,6 @@ void loop()
     // Reading humidity
     humidity = bme.readHumidity();
 
-    // Reading voltage
-    float rawLevel = analogRead(A0);
-    level = map(rawLevel, 98, 192, 200, 400); // You need to adjust these values according to the voltage divider you install
-
     Serial.println("");
     Serial.println("Temperature:");
     printValueAndUnits(tempC, " °C");
@@ -187,18 +180,18 @@ void loop()
     Serial.println("Relative Humidity:");
     printValueAndUnits(humidity, " %");
 
-    Serial.println("Voltage: ");
-    printValueAndUnits(level/100, " V");
-
     responseJson = "";
     responseJson += "{";
     responseJson +=     "\"temperature\":" + String(tempC) + ",";
     responseJson +=     "\"humidity\":" + String(humidity) + ",";
     responseJson +=     "\"pressure\":" + String(pressHpa) + ",";
-    responseJson +=     "\"voltage\":" + String(level/100);
     responseJson += "}";
     setup_wifi();
     
+    /*
+        MQTT Secure port with TLS
+        Publishing without checking CRT
+    */
     client.setServer(mqtt_server, 8883);
     espClient.setInsecure();
 
@@ -223,7 +216,7 @@ void loop()
     Serial.print(SLEEP_DELAY_IN_SECONDS);
     Serial.println(" seconds...");
 
-
+// DeepSleep Mode. Needs additonal connected PINs 
     ESP.deepSleep(SLEEP_DELAY_IN_SECONDS * 1000000, WAKE_RF_DEFAULT);
 
     delay(100);
