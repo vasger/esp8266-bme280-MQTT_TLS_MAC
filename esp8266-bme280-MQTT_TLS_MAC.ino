@@ -44,15 +44,16 @@ char humidityString[6];
 char pressHpaString[6];
 char voltageString[6];
 String responseJson;
+
 /*
 Put you wi-fi credentials here
 */
 const char* ssid = "Wifi-network"; // WiFi network SSID
 const char* password = "Wifi-network-password"; // WiFi network password
 
- 
-
-
+/*
+Put you MQTT credentials here
+*/
 const char* mqtt_server = "mqtt.server.xxx"; // MQTT broker URL
 const char* mqtt_username = "mqtt_username";      // MQTT client user name, if needed
 const char* mqtt_password = "mqtt_password";      // MQTT client password, if needed
